@@ -9,6 +9,6 @@ class RecipeSearchResponse {
     var count: Int = 0
 
     @SerializedName("results")
-    lateinit var recipes: List<RecipeNetworkEntity>
+    var recipes: List<RecipeNetworkEntity> = TODO()
 
 }
