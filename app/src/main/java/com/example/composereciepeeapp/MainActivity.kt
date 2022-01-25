@@ -10,9 +10,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.composereciepeeapp.domain.model.Recipe
-import com.example.composereciepeeapp.network.model.RecipeNetworkEntity
-import com.example.composereciepeeapp.network.model.RecipeNetworkMapper
 import com.example.composereciepeeapp.network.model.RecipeService
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineScope
@@ -20,7 +17,6 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
