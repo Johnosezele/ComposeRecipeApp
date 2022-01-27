@@ -1,6 +1,8 @@
 package com.example.composereciepeeapp
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
@@ -12,15 +14,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.composereciepeeapp.network.model.RecipeService
 import com.google.gson.GsonBuilder
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    private val TAG: String = "AppDebug"
+    
+    @Inject
+    lateinit var someRandomString: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.d(TAG, "onCreate: ${someRandomString}")
         
         setContent { 
             Column(modifier = Modifier.padding(16.dp)) {
@@ -35,17 +48,17 @@ class MainActivity : AppCompatActivity() {
 //        val recipe = Recipe()
 //        val networkEntity: RecipeNetworkEntity = mapper.mapToEntity(recipe)
 //        val r: Recipe = mapper.mapFromEntity(networkEntity)
-        val service = Retrofit.Builder()
-            .baseUrl("https://food2fork.ca/api/recipe")
-            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-            .build()
-            .create(RecipeService::class.java)
-
-        CoroutineScope(IO).launch {
-            val recipe = service.get(
-                token = "Token 9c8b06d329136da358c2d00e76946b0111ce2c48",
-                id = 583
-            )
-        }
+//        val service = Retrofit.Builder()
+//            .baseUrl("https://food2fork.ca/api/recipe")
+//            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+//            .build()
+//            .create(RecipeService::class.java)
+//
+//        CoroutineScope(IO).launch {
+//            val recipe = service.get(
+//                token = "Token 9c8b06d329136da358c2d00e76946b0111ce2c48",
+//                id = 583
+//            )
+//        }
     }
 }
