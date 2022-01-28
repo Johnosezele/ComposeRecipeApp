@@ -2,7 +2,7 @@ package com.example.composereciepeeapp.di
 
 
 import android.content.Context
-import com.example.composereciepeeapp.BaseApplication
+import com.example.composereciepeeapp.presentation.ui.BaseApplication
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

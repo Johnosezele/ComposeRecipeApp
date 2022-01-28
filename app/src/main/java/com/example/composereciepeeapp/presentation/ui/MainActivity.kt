@@ -1,4 +1,4 @@
-package com.example.composereciepeeapp
+package com.example.composereciepeeapp.presentation.ui
 
 import android.content.ContentValues.TAG
 import android.os.Bundle
@@ -25,16 +25,9 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val TAG: String = "AppDebug"
-    
-    @Inject
-    lateinit var someRandomString: String
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.d(TAG, "onCreate: ${someRandomString}")
-        
         setContent { 
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(text = "Hey look a text composable")
