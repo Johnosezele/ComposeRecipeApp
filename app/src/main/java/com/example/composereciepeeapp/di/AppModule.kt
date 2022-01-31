@@ -11,7 +11,7 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(SingletonComponent::class)//this is where you define the component you want to install in. In this case the ApplicationComponent
 object AppModule{
 
     @Singleton

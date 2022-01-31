@@ -1,6 +1,7 @@
 package com.example.composereciepeeapp.presentation.ui.recipe_list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.composereciepeeapp.R
+import com.example.composereciepeeapp.util.TAG
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -30,6 +32,15 @@ class RecipeListFragment: Fragment() {
     ): View? {
         return ComposeView(requireContext()).apply {
             setContent {
+
+                //observing your results
+                val recipes = viewModel.recipes.value
+
+                for (recipe in recipes) {
+                    Log.d(TAG, "onCreateView: ${recipe.title}")
+                }
+
+
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
                         text = "Recipe List",
