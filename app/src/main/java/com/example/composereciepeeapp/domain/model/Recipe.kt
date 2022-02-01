@@ -1,10 +1,6 @@
 package com.example.composereciepeeapp.domain.model
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
 
-
-@Parcelize
 data class Recipe(
     val id: Int? = null,
     val title: String? = null,
@@ -17,4 +13,4 @@ data class Recipe(
     val ingredients: List<String> = listOf(),
     val dateAdded: String? = null,
     val dateUpdated: String? = null,
-) : Parcelable
+)
