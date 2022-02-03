@@ -2,7 +2,7 @@
 
 A simple receipe android app build using kotlin, android studio and MVVM architecture.
 
-This app is my version of the original MVVMRecipeApp by my android boss @ https://github.com/mitchtabian 
+This app is my version of the original MVVMRecipeApp by:https://github.com/mitchtabian 
 
 # Main Features
 1. Kotlin
