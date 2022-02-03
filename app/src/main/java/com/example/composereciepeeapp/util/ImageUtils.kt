@@ -20,9 +20,9 @@ fun loadPictures(
     url: String,
     @DrawableRes defaultImage: Int
 ): MutableState<Bitmap?>{
-    val bitmapState: MutableState<Bitmap?> = remember {
-        mutableStateOf(null)
-    }
+
+    //Handles asynchronous loading of Images from the API
+    val bitmapState: MutableState<Bitmap?> = remember { mutableStateOf(null) }
 
     Glide.with(LocalContext.current)
         .asBitmap()
