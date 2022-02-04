@@ -21,7 +21,7 @@ class RecipeListViewModel @Inject constructor(
     val recipes: MutableState<List<Recipe>> = mutableStateOf(listOf())
 
     //persist search input which may be lost due to configuration changes such as screen rotation
-    val query = mutableStateOf("Chicken")
+    val query = mutableStateOf("")
 
     init {
         newSearch("Chicken")
