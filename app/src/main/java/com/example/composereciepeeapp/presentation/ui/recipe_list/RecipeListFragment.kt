@@ -1,25 +1,21 @@
 package com.example.composereciepeeapp.presentation.ui.recipe_list
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,12 +28,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import com.example.composereciepeeapp.R
 import com.example.composereciepeeapp.presentation.ui.Components.FoodCategoryChip
 import com.example.composereciepeeapp.presentation.ui.Components.RecipeCard
-import com.example.composereciepeeapp.util.TAG
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RecipeListFragment: Fragment() {
@@ -45,6 +39,7 @@ class RecipeListFragment: Fragment() {
     val viewModel: RecipeListViewModel by viewModels()
 
 
+    @SuppressLint("CoroutineCreationDuringComposition")
     @OptIn(ExperimentalComposeUiApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,6 +54,9 @@ class RecipeListFragment: Fragment() {
 
                 //get user text input from viewModel
                 val query = viewModel.query.value
+
+                //watching this mutable state value
+                val selectedCategory = viewModel.selectedCategory.value
 
                 val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -106,7 +104,7 @@ class RecipeListFragment: Fragment() {
                                     keyboardActions = KeyboardActions(
                                         onSearch = {
                                             ImeAction.Search
-                                            viewModel.newSearch(query)
+                                            viewModel.newSearch()
                                             keyboardController?.hide()
                                         }
                                     ),
@@ -118,17 +116,26 @@ class RecipeListFragment: Fragment() {
                                 )
                             }
 
+                            //setting scroll position
+                            val scrollState = rememberScrollState()
+                            val coroutineScope = rememberCoroutineScope()
+
                             //Horizontal Scrollable Row
                             Row(modifier = Modifier
-                                .horizontalScroll(rememberScrollState())
-                                .fillMaxWidth()) {
+                                .horizontalScroll(scrollState)
+                                .fillMaxWidth()
+                                .padding(start = 8.dp, bottom = 8.dp),
+                            ) {
+                                coroutineScope.launch {
+                                scrollState.scrollTo(viewModel.categoryScrollPosition.toInt())
+                            }
                                 for (category in getAllFoodCategories()){
                                     FoodCategoryChip(
                                         category = category.value,
-                                        onExecuteSearch = {
-                                            viewModel.onQueryChanged(it)
-                                            viewModel.newSearch(it)
-                                        }
+                                        isSelected = selectedCategory == category,
+                                        onSelectedCategoryChanged = {viewModel.onSelectedCategoryChanged(it)
+                                                                    viewModel.onChangedCategoryScrollPosition(scrollState.value)},
+                                         onExecuteSearch = viewModel::newSearch,
                                     )
                                 }
                             }
