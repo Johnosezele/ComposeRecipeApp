@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.composereciepeeapp.domain.model.Recipe
 import com.example.composereciepeeapp.network.model.repository.RecipeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
@@ -29,6 +30,9 @@ class RecipeListViewModel @Inject constructor(
     //saving state of list on device rotation
     var categoryScrollPosition: Float = 0f
 
+    //to show whether loading or not
+    val loading = mutableStateOf(false)
+
     init {
         newSearch()
     }
@@ -36,13 +40,35 @@ class RecipeListViewModel @Inject constructor(
     //asynchronous loading from API
     fun newSearch(){
         viewModelScope.launch {
+            //started loading
+            loading.value = true
+
+            resetSearchState()
+
+            delay(2000)
+
             val result = repository.search(
                 token = token,
                 page = 1,
                 query = query.value,
             )
             recipes.value = result
+
+            //finished loading
+            loading.value = false
         }
+    }
+
+    //function for resetting the searched state
+    private fun resetSearchState(){
+        recipes.value = listOf()
+        if(selectedCategory.value?.value != query.value)
+            clearSelectedCategory()
+    }
+
+    //keeping track of category clicked in the toolbar
+    private fun clearSelectedCategory(){
+        selectedCategory.value = null
     }
 
     //function that will enable user edit the default searched text

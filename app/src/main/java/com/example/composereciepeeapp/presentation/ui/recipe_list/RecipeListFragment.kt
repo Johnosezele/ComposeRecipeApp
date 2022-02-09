@@ -28,6 +28,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.composereciepeeapp.presentation.ui.Components.CircularIndeterminateProgressBar
 import com.example.composereciepeeapp.presentation.ui.Components.FoodCategoryChip
 import com.example.composereciepeeapp.presentation.ui.Components.RecipeCard
 import com.example.composereciepeeapp.presentation.ui.Components.SearchAppBar
@@ -59,6 +60,9 @@ class RecipeListFragment: Fragment() {
                 //watching this mutable state value
                 val selectedCategory = viewModel.selectedCategory.value
 
+                val loading = viewModel.loading.value
+
+
                 Column {
                     SearchAppBar(
                         query = query,
@@ -67,17 +71,23 @@ class RecipeListFragment: Fragment() {
                         scrollPosition = viewModel.categoryScrollPosition,
                         selectedCategory = selectedCategory,
                         onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
-                        onChangedCategoryScrollPosition = viewModel::onChangedCategoryScrollPosition,
+                        onChangedCategoryScrollPosition = viewModel:: onChangedCategoryScrollPosition,
                     )
+                    
+                    Box(modifier = Modifier.fillMaxSize()) {
 
-                    //RecyclerView implementation in Jetpack compose
-                    LazyColumn{
-                        itemsIndexed(
-                            items = recipes
-                        ){index, recipe ->
-                            RecipeCard(recipe = recipe, onClick = {})
+                        //RecyclerView implementation in Jetpack compose
+                        LazyColumn{
+                            itemsIndexed(
+                                items = recipes
+                            ){index, recipe ->
+                                RecipeCard(recipe = recipe, onClick = {})
+                            }
                         }
+                        CircularIndeterminateProgressBar(isDisplayed = loading)
+
                     }
+
                     }
 
             }
@@ -85,6 +95,3 @@ class RecipeListFragment: Fragment() {
     }
 }
 
-//private operator fun ImeAction.not(): Boolean {
-//    TODO("Not yet implemented")
-//}
