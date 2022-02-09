@@ -30,6 +30,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.composereciepeeapp.presentation.ui.Components.FoodCategoryChip
 import com.example.composereciepeeapp.presentation.ui.Components.RecipeCard
+import com.example.composereciepeeapp.presentation.ui.Components.SearchAppBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -58,91 +59,16 @@ class RecipeListFragment: Fragment() {
                 //watching this mutable state value
                 val selectedCategory = viewModel.selectedCategory.value
 
-                val keyboardController = LocalSoftwareKeyboardController.current
-
                 Column {
-
-                    //to clear onScreen keyboard
-                    val focusManager = LocalFocusManager.current
-
-                    //Building the custom toolbar
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        color = Color.White,
-                        elevation = 8.dp,
-                    ){
-                        Column {
-
-                            Row(modifier = Modifier.fillMaxWidth()) {
-
-                                //To Capture user inputs
-                                TextField(
-                                    modifier = Modifier
-                                        .fillMaxWidth(0.9f)
-                                        .padding(8.dp),
-
-                                    value = query, //-> this is the default value gotten from the viewModel,
-                                    //  this is stored in the viewModel so that data will not be lost
-                                    //  due to device configuration changes.
-                                    onValueChange = {
-                                        //New value entered by the user gotten from viewModel
-                                        //due to configuration changes.
-                                            newValue -> viewModel.onQueryChanged(newValue)
-                                    },
-
-                                    label = {
-                                        Text(text = "Search")
-                                    },
-                                    keyboardOptions = KeyboardOptions(
-                                        keyboardType = KeyboardType.Text,
-                                        imeAction = ImeAction.Search
-                                    ),
-                                    leadingIcon = {
-                                        Icon(imageVector = Icons.Filled.Search, contentDescription = null)
-                                    },
-                                    keyboardActions = KeyboardActions(
-                                        onSearch = {
-                                            ImeAction.Search
-                                            viewModel.newSearch()
-                                            keyboardController?.hide()
-                                        }
-                                    ),
-                                    textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
-                                    colors = TextFieldDefaults.textFieldColors(
-                                        backgroundColor = MaterialTheme.colors.surface)
-
-
-                                )
-                            }
-
-                            //setting scroll position
-                            val scrollState = rememberScrollState()
-                            val coroutineScope = rememberCoroutineScope()
-
-                            //Horizontal Scrollable Row
-                            Row(modifier = Modifier
-                                .horizontalScroll(scrollState)
-                                .fillMaxWidth()
-                                .padding(start = 8.dp, bottom = 8.dp),
-                            ) {
-                                coroutineScope.launch {
-                                scrollState.scrollTo(viewModel.categoryScrollPosition.toInt())
-                            }
-                                for (category in getAllFoodCategories()){
-                                    FoodCategoryChip(
-                                        category = category.value,
-                                        isSelected = selectedCategory == category,
-                                        onSelectedCategoryChanged = {viewModel.onSelectedCategoryChanged(it)
-                                                                    viewModel.onChangedCategoryScrollPosition(scrollState.value)},
-                                         onExecuteSearch = viewModel::newSearch,
-                                    )
-                                }
-                            }
-                        }
-
-
-                        }
+                    SearchAppBar(
+                        query = query,
+                        onQueryChanged = viewModel::onQueryChanged,
+                        onExecuteSearch = viewModel::newSearch,
+                        scrollPosition = viewModel.categoryScrollPosition,
+                        selectedCategory = selectedCategory,
+                        onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
+                        onChangedCategoryScrollPosition = viewModel::onChangedCategoryScrollPosition,
+                    )
 
                     //RecyclerView implementation in Jetpack compose
                     LazyColumn{
